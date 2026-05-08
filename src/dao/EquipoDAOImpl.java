@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConexionDB;
+import dto.EquipoEntrenadorDTO;
 import model.Equipo;
 
 import java.sql.Connection;
@@ -86,5 +87,33 @@ public class EquipoDAOImpl implements EquipoDAO {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
+    }
+
+    // ── listarConNombreEntrenador (JOIN) ──────────────────────────────────────
+    @Override
+    public List<EquipoEntrenadorDTO> listarConNombreEntrenador() throws SQLException {
+        List<EquipoEntrenadorDTO> lista = new ArrayList<>();
+        String sql = "SELECT e.id, e.nombre, e.categoria, e.puntos, " +
+                     "COALESCE(CONCAT(u.nombre, ' ', u.apellidos), 'Sin entrenador') AS nombre_entrenador " +
+                     "FROM equipos e " +
+                     "LEFT JOIN entrenadores en ON e.entrenador_id = en.usuario_id " +
+                     "LEFT JOIN usuarios u ON en.usuario_id = u.id " +
+                     "ORDER BY e.puntos DESC, e.nombre";
+
+        try (Connection con = ConexionDB.conectar();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(new EquipoEntrenadorDTO(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("categoria"),
+                        rs.getInt("puntos"),
+                        rs.getString("nombre_entrenador")
+                ));
+            }
+        }
+        return lista;
     }
 }

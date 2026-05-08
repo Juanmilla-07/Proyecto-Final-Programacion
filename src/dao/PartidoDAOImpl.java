@@ -35,7 +35,8 @@ public class PartidoDAOImpl implements PartidoDAO {
     @Override
     public List<PartidoDTO> listarTodos() throws SQLException {
         List<PartidoDTO> lista = new ArrayList<>();
-        String sql = "SELECT p.id, p.fecha, p.goles_local, p.goles_visitante, p.jornada, " +
+        String sql = "SELECT p.id, p.equipo_local_id, p.equipo_visit_id, " +
+                     "p.fecha, p.goles_local, p.goles_visitante, p.jornada, " +
                      "el.nombre AS local_nombre, ev.nombre AS visit_nombre " +
                      "FROM partidos p " +
                      "JOIN equipos el ON p.equipo_local_id = el.id " +
@@ -50,6 +51,8 @@ public class PartidoDAOImpl implements PartidoDAO {
                 Date fechaSql = rs.getDate("fecha");
                 lista.add(new PartidoDTO(
                         rs.getInt("id"),
+                        rs.getInt("equipo_local_id"),
+                        rs.getInt("equipo_visit_id"),
                         rs.getString("local_nombre"),
                         rs.getString("visit_nombre"),
                         fechaSql != null ? fechaSql.toLocalDate() : null,

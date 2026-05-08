@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConexionDB;
+import dto.JugadorEquipoDTO;
 import model.Jugador;
 
 import java.sql.Connection;
@@ -120,5 +121,39 @@ public class JugadorDAOImpl implements JugadorDAO {
             ps.setInt(1, usuarioId);
             return ps.executeUpdate() > 0;
         }
+    }
+
+    // ── listarConEquipo (JOIN) ────────────────────────────────────────────────
+    @Override
+    public List<JugadorEquipoDTO> listarConEquipo() throws SQLException {
+        List<JugadorEquipoDTO> lista = new ArrayList<>();
+        String sql = "SELECT u.id, u.nombre, u.apellidos, u.username, " +
+                     "j.posicion, j.dorsal, j.fecha_nac, " +
+                     "COALESCE(e.nombre, 'Sin equipo') AS nombre_equipo " +
+                     "FROM usuarios u " +
+                     "JOIN jugadores j ON u.id = j.usuario_id " +
+                     "LEFT JOIN equipo_jugador ej ON j.usuario_id = ej.jugador_id " +
+                     "LEFT JOIN equipos e ON ej.equipo_id = e.id " +
+                     "ORDER BY u.apellidos, u.nombre";
+
+        try (Connection con = ConexionDB.conectar();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Date fecha = rs.getDate("fecha_nac");
+                lista.add(new JugadorEquipoDTO(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("apellidos"),
+                        rs.getString("username"),
+                        rs.getString("posicion"),
+                        rs.getInt("dorsal"),
+                        fecha != null ? fecha.toLocalDate() : null,
+                        rs.getString("nombre_equipo")
+                ));
+            }
+        }
+        return lista;
     }
 }
