@@ -16,7 +16,7 @@ public class JugadorDAOImpl implements JugadorDAO {
 
     @Override
     public boolean registrar(Jugador j) throws SQLException {
-        String sqlUsuario = "INSERT INTO usuarios (username, password, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, 'jugador')";
+        String sqlUsuario = "INSERT INTO usuarios (usuario, contraseña, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, 'jugador')";
         String sqlJugador = "INSERT INTO jugadores (usuario_id, posicion, dorsal, fecha_nac) VALUES (LAST_INSERT_ID(), ?, ?, ?)";
 
         Connection con = ConexionDB.conectar();
@@ -48,7 +48,7 @@ public class JugadorDAOImpl implements JugadorDAO {
     @Override
     public List<Jugador> listarTodos() throws SQLException {
         List<Jugador> lista = new ArrayList<>();
-        String sql = "SELECT u.id, u.username, u.password, u.email, u.nombre, u.apellidos, u.dni, " +
+        String sql = "SELECT u.id, u.usuario, u.contraseña, u.email, u.nombre, u.apellidos, u.dni, " +
                      "j.posicion, j.dorsal, j.fecha_nac " +
                      "FROM usuarios u JOIN jugadores j ON u.id = j.usuario_id " +
                      "ORDER BY u.apellidos, u.nombre";
@@ -60,8 +60,8 @@ public class JugadorDAOImpl implements JugadorDAO {
             while (rs.next()) {
                 Jugador j = new Jugador();
                 j.setId(rs.getInt("id"));
-                j.setUsername(rs.getString("username"));
-                j.setPassword(rs.getString("password"));
+                j.setUsername(rs.getString("usuario"));
+                j.setPassword(rs.getString("contraseña"));
                 j.setEmail(rs.getString("email"));
                 j.setNombre(rs.getString("nombre"));
                 j.setApellidos(rs.getString("apellidos"));
@@ -80,7 +80,7 @@ public class JugadorDAOImpl implements JugadorDAO {
 
     @Override
     public boolean actualizar(Jugador j) throws SQLException {
-        String sqlUsuario = "UPDATE usuarios SET username=?, password=?, email=?, nombre=?, apellidos=?, dni=? WHERE id=?";
+        String sqlUsuario = "UPDATE usuarios SET usuario=?, contraseña=?, email=?, nombre=?, apellidos=?, dni=? WHERE id=?";
         String sqlJugador = "UPDATE jugadores SET posicion=?, dorsal=?, fecha_nac=? WHERE usuario_id=?";
 
         Connection con = ConexionDB.conectar();
@@ -123,11 +123,10 @@ public class JugadorDAOImpl implements JugadorDAO {
         }
     }
 
-    // ── listarConEquipo (JOIN) ────────────────────────────────────────────────
     @Override
     public List<JugadorEquipoDTO> listarConEquipo() throws SQLException {
         List<JugadorEquipoDTO> lista = new ArrayList<>();
-        String sql = "SELECT u.id, u.nombre, u.apellidos, u.username, " +
+        String sql = "SELECT u.id, u.nombre, u.apellidos, u.usuario, " +
                      "j.posicion, j.dorsal, j.fecha_nac, " +
                      "COALESCE(e.nombre, 'Sin equipo') AS nombre_equipo " +
                      "FROM usuarios u " +
@@ -146,7 +145,7 @@ public class JugadorDAOImpl implements JugadorDAO {
                         rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("apellidos"),
-                        rs.getString("username"),
+                        rs.getString("usuario"),
                         rs.getString("posicion"),
                         rs.getInt("dorsal"),
                         fecha != null ? fecha.toLocalDate() : null,

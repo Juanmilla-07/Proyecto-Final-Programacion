@@ -15,7 +15,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public Usuario validar(String username, String password) throws SQLException {
         Usuario user = null;
-        String sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM usuarios WHERE usuario = ? AND contraseña = ?";
 
         try (Connection con = ConexionDB.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -25,16 +25,15 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    user = new Usuario(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("email"),
-                            rs.getString("nombre"),
-                            rs.getString("apellidos"),
-                            rs.getString("dni"),
-                            rs.getString("rol")
-                    );
+                    user = new Usuario();
+                    user.setId(rs.getInt("id"));
+                    user.setUsername(rs.getString("usuario"));
+                    user.setPassword(rs.getString("contraseña"));
+                    user.setEmail(rs.getString("email"));
+                    user.setNombre(rs.getString("nombre"));
+                    user.setApellidos(rs.getString("apellidos"));
+                    user.setDni(rs.getString("dni"));
+                    user.setRol(rs.getString("rol"));
                 }
             }
         }
@@ -43,7 +42,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
     public boolean insertar(Usuario u) throws SQLException {
-        String sql = "INSERT INTO usuarios (username, password, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios (usuario, contraseña, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection con = ConexionDB.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -70,16 +69,16 @@ public class UsuarioDAOImpl implements UsuarioDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                lista.add(new Usuario(
-                        rs.getInt("id"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("email"),
-                        rs.getString("nombre"),
-                        rs.getString("apellidos"),
-                        rs.getString("dni"),
-                        rs.getString("rol")
-                ));
+                Usuario u = new Usuario();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("usuario"));
+                u.setPassword(rs.getString("contraseña"));
+                u.setEmail(rs.getString("email"));
+                u.setNombre(rs.getString("nombre"));
+                u.setApellidos(rs.getString("apellidos"));
+                u.setDni(rs.getString("dni"));
+                u.setRol(rs.getString("rol"));
+                lista.add(u);
             }
         }
         return lista;
@@ -87,7 +86,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
     public boolean actualizar(Usuario u) throws SQLException {
-        String sql = "UPDATE usuarios SET username=?, password=?, email=?, nombre=?, apellidos=?, dni=?, rol=? WHERE id=?";
+        String sql = "UPDATE usuarios SET usuario=?, contraseña=?, email=?, nombre=?, apellidos=?, dni=?, rol=? WHERE id=?";
 
         try (Connection con = ConexionDB.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {

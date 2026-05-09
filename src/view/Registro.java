@@ -37,7 +37,7 @@ public class Registro extends JFrame implements ActionListener {
 
     public Registro() {
         setTitle("Club Deportivo - Registro");
-        setSize(380, 480);
+        setSize(380, 520);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -58,11 +58,11 @@ public class Registro extends JFrame implements ActionListener {
         txtPassword.setBounds(130, 55, 150, 25);
         add(txtPassword);
 
-        lblEmail = new JLabel("Email:");
-        lblEmail.setBounds(20, 90, 100, 25);
+        lblEmail = new JLabel("Email (obligatorio):");
+        lblEmail.setBounds(20, 90, 130, 25);
         add(lblEmail);
         txtEmail = new JTextField();
-        txtEmail.setBounds(130, 90, 150, 25);
+        txtEmail.setBounds(160, 90, 120, 25);
         add(txtEmail);
 
         lblNombre = new JLabel("Nombre:");

@@ -31,8 +31,8 @@ public class Principal extends JFrame implements ActionListener {
     private DefaultTableModel modeloTabla;
 
     // Formulario
-    private JLabel lbl1, lbl2, lbl3, lbl4, lbl5, lbl6;
-    private JTextField txt1, txt2, txt3, txt4, txt5, txt6;
+    private JLabel lbl1, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7, lbl8;
+    private JTextField txt1, txt2, txt3, txt4, txt5, txt6, txt7, txt8;
     private JButton btnNuevo, btnGuardar, btnEliminar;
 
     // Menú
@@ -46,7 +46,7 @@ public class Principal extends JFrame implements ActionListener {
     public Principal(Usuario usuario) {
         this.usuarioActual = usuario;
         setTitle("Club Deportivo - " + usuario.getNombre() + " (" + usuario.getRol() + ")");
-        setSize(950, 600);
+        setSize(950, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -131,18 +131,24 @@ public class Principal extends JFrame implements ActionListener {
         lbl6 = new JLabel("Campo6:"); lbl6.setBounds(730, 310, 100, 25); add(lbl6);
         txt6 = new JTextField();      txt6.setBounds(730, 335, 170, 25); add(txt6);
 
+        lbl7 = new JLabel("Campo7:"); lbl7.setBounds(730, 370, 100, 25); add(lbl7);
+        txt7 = new JTextField();      txt7.setBounds(730, 395, 170, 25); add(txt7);
+
+        lbl8 = new JLabel("Campo8:"); lbl8.setBounds(730, 425, 100, 25); add(lbl8);
+        txt8 = new JTextField();      txt8.setBounds(730, 450, 170, 25); add(txt8);
+
         btnNuevo = new JButton("Nuevo");
-        btnNuevo.setBounds(730, 390, 170, 30);
+        btnNuevo.setBounds(730, 485, 170, 25);
         add(btnNuevo);
         btnNuevo.addActionListener(this);
 
         btnGuardar = new JButton("Guardar");
-        btnGuardar.setBounds(730, 430, 170, 30);
+        btnGuardar.setBounds(730, 515, 170, 25);
         add(btnGuardar);
         btnGuardar.addActionListener(this);
 
         btnEliminar = new JButton("Eliminar");
-        btnEliminar.setBounds(730, 470, 170, 30);
+        btnEliminar.setBounds(730, 545, 170, 25);
         add(btnEliminar);
         btnEliminar.addActionListener(this);
 
@@ -172,13 +178,16 @@ public class Principal extends JFrame implements ActionListener {
         lbl1.setText("Nombre:"); lbl2.setText("Apellidos:");
         lbl3.setText("Username:"); lbl4.setText("Password:");
         lbl5.setText("Posición:"); lbl6.setText("Dorsal:");
+        lbl7.setText("Email:"); lbl8.setText("DNI:");
+        txt7.setVisible(true); lbl7.setVisible(true);
+        txt8.setVisible(true); lbl8.setVisible(true);
 
-        modeloTabla.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Apellidos", "Username", "Posición", "Dorsal"});
+        modeloTabla.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Apellidos", "Username", "Posición", "Dorsal", "Email", "DNI"});
         modeloTabla.setRowCount(0);
         try {
             List<Jugador> lista = jugadorDAO.listarTodos();
             for (Jugador j : lista) {
-                modeloTabla.addRow(new Object[]{j.getId(), j.getNombre(), j.getApellidos(), j.getUsername(), j.getPosicion(), j.getDorsal()});
+                modeloTabla.addRow(new Object[]{j.getId(), j.getNombre(), j.getApellidos(), j.getUsername(), j.getPosicion(), j.getDorsal(), j.getEmail(), j.getDni()});
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -191,13 +200,16 @@ public class Principal extends JFrame implements ActionListener {
         lbl1.setText("Nombre:"); lbl2.setText("Apellidos:");
         lbl3.setText("Username:"); lbl4.setText("Password:");
         lbl5.setText("Especialidad:"); lbl6.setText("Licencia:");
+        lbl7.setText("Email:"); lbl8.setText("DNI:");
+        txt7.setVisible(true); lbl7.setVisible(true);
+        txt8.setVisible(true); lbl8.setVisible(true);
 
-        modeloTabla.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Apellidos", "Username", "Especialidad", "Licencia"});
+        modeloTabla.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Apellidos", "Username", "Especialidad", "Licencia", "Email", "DNI"});
         modeloTabla.setRowCount(0);
         try {
             List<Entrenador> lista = entrenadorDAO.listarTodos();
             for (Entrenador en : lista) {
-                modeloTabla.addRow(new Object[]{en.getId(), en.getNombre(), en.getApellidos(), en.getUsername(), en.getEspecialidad(), en.getLicencia()});
+                modeloTabla.addRow(new Object[]{en.getId(), en.getNombre(), en.getApellidos(), en.getUsername(), en.getEspecialidad(), en.getLicencia(), en.getEmail(), en.getDni()});
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -211,6 +223,8 @@ public class Principal extends JFrame implements ActionListener {
         lbl3.setText("ID Entrenador:"); lbl4.setText("Puntos:");
         lbl5.setText(""); lbl6.setText("");
         txt5.setVisible(false); txt6.setVisible(false);
+        txt7.setVisible(false); lbl7.setVisible(false);
+        txt8.setVisible(false); lbl8.setVisible(false);
 
         modeloTabla.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Categoría", "ID Entrenador", "Puntos"});
         modeloTabla.setRowCount(0);
@@ -231,6 +245,8 @@ public class Principal extends JFrame implements ActionListener {
         lbl3.setText("Goles Local:"); lbl4.setText("Goles Visitante:");
         lbl5.setText("Fecha (yyyy-MM-dd):"); lbl6.setText("Jornada:");
         txt5.setVisible(true); txt6.setVisible(true);
+        txt7.setVisible(false); lbl7.setVisible(false);
+        txt8.setVisible(false); lbl8.setVisible(false);
 
         modeloTabla.setColumnIdentifiers(new Object[]{"ID", "Jornada", "Local", "Visitante", "Resultado", "Fecha"});
         modeloTabla.setRowCount(0);
@@ -255,6 +271,8 @@ public class Principal extends JFrame implements ActionListener {
             txt4.setText("");
             txt5.setText((String) modeloTabla.getValueAt(fila, 4));
             txt6.setText(String.valueOf(modeloTabla.getValueAt(fila, 5)));
+            txt7.setText((String) modeloTabla.getValueAt(fila, 6));
+            txt8.setText((String) modeloTabla.getValueAt(fila, 7));
         }
 
         if (moduloActivo.equals("entrenadores")) {
@@ -264,6 +282,8 @@ public class Principal extends JFrame implements ActionListener {
             txt4.setText("");
             txt5.setText((String) modeloTabla.getValueAt(fila, 4));
             txt6.setText((String) modeloTabla.getValueAt(fila, 5));
+            txt7.setText((String) modeloTabla.getValueAt(fila, 6));
+            txt8.setText((String) modeloTabla.getValueAt(fila, 7));
         }
 
         if (moduloActivo.equals("equipos")) {
@@ -304,6 +324,8 @@ public class Principal extends JFrame implements ActionListener {
                 j.setPassword(txt4.getText().trim());
                 j.setPosicion(txt5.getText().trim());
                 j.setDorsal(Integer.parseInt(txt6.getText().trim()));
+                j.setEmail(txt7.getText().trim());
+                j.setDni(txt8.getText().trim());
                 if (idSeleccionado == -1) {
                     jugadorDAO.registrar(j);
                 } else {
@@ -322,6 +344,8 @@ public class Principal extends JFrame implements ActionListener {
                 en.setPassword(txt4.getText().trim());
                 en.setEspecialidad(txt5.getText().trim());
                 en.setLicencia(txt6.getText().trim());
+                en.setEmail(txt7.getText().trim());
+                en.setDni(txt8.getText().trim());
                 if (idSeleccionado == -1) {
                     entrenadorDAO.registrar(en);
                 } else {
@@ -406,7 +430,10 @@ public class Principal extends JFrame implements ActionListener {
         idSeleccionado = -1;
         txt1.setText(""); txt2.setText(""); txt3.setText("");
         txt4.setText(""); txt5.setText(""); txt6.setText("");
+        txt7.setText(""); txt8.setText("");
         txt5.setVisible(true); txt6.setVisible(true);
+        txt7.setVisible(true); lbl7.setVisible(true);
+        txt8.setVisible(true); lbl8.setVisible(true);
         tabla.clearSelection();
     }
 

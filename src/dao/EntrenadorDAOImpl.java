@@ -14,7 +14,7 @@ public class EntrenadorDAOImpl implements EntrenadorDAO {
 
     @Override
     public boolean registrar(Entrenador e) throws SQLException {
-        String sqlUsuario    = "INSERT INTO usuarios (username, password, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, 'entrenador')";
+        String sqlUsuario    = "INSERT INTO usuarios (usuario, contraseña, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, 'entrenador')";
         String sqlEntrenador = "INSERT INTO entrenadores (usuario_id, especialidad, licencia) VALUES (LAST_INSERT_ID(), ?, ?)";
 
         Connection con = ConexionDB.conectar();
@@ -45,7 +45,7 @@ public class EntrenadorDAOImpl implements EntrenadorDAO {
     @Override
     public List<Entrenador> listarTodos() throws SQLException {
         List<Entrenador> lista = new ArrayList<>();
-        String sql = "SELECT u.id, u.username, u.password, u.email, u.nombre, u.apellidos, u.dni, " +
+        String sql = "SELECT u.id, u.usuario, u.contraseña, u.email, u.nombre, u.apellidos, u.dni, " +
                      "e.especialidad, e.licencia " +
                      "FROM usuarios u JOIN entrenadores e ON u.id = e.usuario_id " +
                      "ORDER BY u.apellidos, u.nombre";
@@ -55,17 +55,17 @@ public class EntrenadorDAOImpl implements EntrenadorDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                lista.add(new Entrenador(
-                        rs.getInt("id"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("email"),
-                        rs.getString("nombre"),
-                        rs.getString("apellidos"),
-                        rs.getString("dni"),
-                        rs.getString("especialidad"),
-                        rs.getString("licencia")
-                ));
+                Entrenador en = new Entrenador();
+                en.setId(rs.getInt("id"));
+                en.setUsername(rs.getString("usuario"));
+                en.setPassword(rs.getString("contraseña"));
+                en.setEmail(rs.getString("email"));
+                en.setNombre(rs.getString("nombre"));
+                en.setApellidos(rs.getString("apellidos"));
+                en.setDni(rs.getString("dni"));
+                en.setEspecialidad(rs.getString("especialidad"));
+                en.setLicencia(rs.getString("licencia"));
+                lista.add(en);
             }
         }
         return lista;
@@ -73,7 +73,7 @@ public class EntrenadorDAOImpl implements EntrenadorDAO {
 
     @Override
     public boolean actualizar(Entrenador e) throws SQLException {
-        String sqlUsuario    = "UPDATE usuarios SET username=?, password=?, email=?, nombre=?, apellidos=?, dni=? WHERE id=?";
+        String sqlUsuario    = "UPDATE usuarios SET usuario=?, contraseña=?, email=?, nombre=?, apellidos=?, dni=? WHERE id=?";
         String sqlEntrenador = "UPDATE entrenadores SET especialidad=?, licencia=? WHERE usuario_id=?";
 
         Connection con = ConexionDB.conectar();
